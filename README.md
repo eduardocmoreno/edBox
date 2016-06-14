@@ -48,23 +48,23 @@ $(document).ready(function(){
 #### Options
 Option | Default Value | Description
 --- | --- | ---
-content | null | Call the content (DOM elem ID, HTML, simple text, images, etc...)
-width | null | Set a fixed width
-height | null | Set a fixed height
-prefixId | box | Set the name of the prefix ID (change this to use as a diferent skin)
-htmlClose | &lt;img src="images/close-modal.png"/&gt; | Set the close image tag with url location or html or text
-header | null | Set the header content
-footer | null | Set the footer content
+content | null | html, text, images or external pages
+width | null | Fixed width
+height | null | Fixed height
+prefixId | box | Change this to create your own skin
+htmlClose | &lt;img src="images/close-modal.png"/&gt; | html, text or images
+header | null | Header content
+footer | null | Footer content
 beforeOpen | function() {}  | Callback before open
 beforeClose | function() {}  | Callback before close
 onOpen | function() {} | Callback after open
 onClose | function() {}, | Callback after close
-disableClose | false | Disable or enable close modal function
-imgLoad | images/box-load.gif | Loading image url location
-animation | true | Disable or enable animations
+disableClose | false | Disable / enable close function
+imgLoad | images/box-load.gif | Load image url location
+animation | true | Disable / enable animations
 fx | slide | Animation type (slide, fade or toggle)
-duration | fast | Set the animation duration (fast, slow or set milisseconds)
-easing | swing | Set the easing motion (require jQuery easing plugin - http://gsgd.co.uk/sandbox/jquery/easing/)
+duration | fast | Animation duration (fast, slow or set milisseconds)
+easing | swing | Animation easing <br> require jQuery easing plugin - http://gsgd.co.uk/sandbox/jquery/easing/
 
 #### Change Log
 version 1.1
