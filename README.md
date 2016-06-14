@@ -52,7 +52,7 @@ content | null | Call the content (DOM elem ID, HTML, simple text, images, etc..
 width | null | Set a fixed width
 height | null | Set a fixed height
 prefixId | box | Set the name of the prefix ID (change this to use as a diferent skin)
-htmlClose | img src="images/close-modal.png" | Set the close image tag with url location or html or text
+htmlClose | &lt;img src="images/close-modal.png"/&gt; | Set the close image tag with url location or html or text
 header | null | Set the header content
 footer | null | Set the footer content
 beforeOpen | function() {}  | Callback before open
