@@ -1,5 +1,5 @@
 /*
- * jQuery Edbox plugin v.1.8
+ * jQuery Edbox plugin v.1.7
  * @author Eduardo Carneiro Moreno - eduardocmoreno[at]gmail[dot]com
  * Code under MIT License - http://en.wikipedia.org/wiki/MIT_License
  */
@@ -7,69 +7,100 @@
 (function($) {
 	var edboxInstance = false;
 
-	$.extend({
-		edbox: function(settings, elem){
-			var defaults = {
-				content     : null,
-				width       : null,
-				height      : null,
-				prefixId    : 'box',
-				htmlClose   : '<img src="images/close-modal.png"/>',
-				header      : '',
-				footer      : '',
-				beforeOpen  : function() {},
-				beforeClose : function() {},
-				onOpen      : function() {},
-				onClose     : function() {},
-				disableClose: false,
-				imgLoad     : 'images/box-load.gif',
-				animation   : true,
-				fx          : 'slide',
-				duration    : 'fast',
-				easing      : 'swing'
-			},
-				options = $.extend({}, defaults, settings),
-				window_h = $(window).height(),
-				window_w = $(window).width();
+	$.fn.edbox = function(settings) {
+		var defaults = {
+			content     : null,
+			width       : null,
+			height      : null,
+			prefixId    : 'box',
+			htmlClose   : '<img src="images/close-modal.png"/>',
+			header      : '',
+			footer      : '',
+			beforeOpen  : function() {},
+			beforeClose : function() {},
+			onOpen      : function() {},
+			onClose     : function() {},
+			disableClose: false,
+			imgLoad     : 'images/box-load.gif',
+			animation   : true,
+			fx          : 'slide',
+			duration    : 'fast',
+			easing      : 'swing'
+		};
 
-			if(!edboxInstance){
+		var options = $.extend({}, defaults, settings),
+			window_h = $(window).height(),
+			window_w = $(window).width();
+
+		return this.each(function() {
+			var elem = $(this).on('click', function(e) {
+				!edboxInstance && buildBox();
+				e.preventDefault();
+			});
+
+			var content = options.content || elem.attr('href') || elem.attr('data-content');
+
+			function buildBox() {
 				edboxInstance = true;
+
 				options.beforeOpen();
 
-				var el = $(elem),
-					content = options.content || el.attr('href') || el.attr('data-content');
-
 				var boxOverlay = $('body')
-						.prepend('<div id="' + options.prefixId + '-overlay"/>')
-						.find('#' + options.prefixId + '-overlay')
-						.css({
-							'height'  : '100%',
-							'left'    : '0',
-							'position': 'fixed',
-							'top'     : '0',
-							'width'   : '100%',
-							'z-index' : '100'
-						}),
-					box = boxOverlay
-						.after('<div id="' + options.prefixId + '"/>')
-						.next('#' + options.prefixId)
-						.css({
-							'margin'    : 0,
-							'position'  : 'fixed',
-							'visibility': 'hidden',
-							'z-index'   : '101'
-						}),
-					boxContent = box
-						.append('<div id="' + options.prefixId + '-content"/>')
-						.find('#' + options.prefixId + '-content')
-						.css({
-							'margin'    : 0,
-							'overflow-x': 'hidden',
-							'overflow-y': 'hidden',
-							'position'  : 'relative'
-						});
+					.prepend('<div id="' + options.prefixId + '-overlay"/>')
+					.find('#' + options.prefixId + '-overlay')
+					.css({
+						'height'  : '100%',
+						'left'    : '0',
+						'position': 'fixed',
+						'top'     : '0',
+						'width'   : '100%',
+						'z-index' : '100'
+					});
 
-				
+				var box = boxOverlay
+					.after('<div id="' + options.prefixId + '"/>')
+					.next('#' + options.prefixId)
+					.css({
+						'margin'    : 0,
+						'position'  : 'fixed',
+						'visibility': 'hidden',
+						'z-index'   : '101'
+					});
+
+				var boxContent = box
+					.append('<div id="' + options.prefixId + '-content"/>')
+					.find('#' + options.prefixId + '-content')
+					.css({
+						'margin'    : 0,
+						'overflow-x': 'hidden',
+						'overflow-y': 'hidden',
+						'position'  : 'relative'
+					});
+
+				if (options.header) {
+					var boxHeader = box
+						.prepend('<div id="' + options.prefixId + '-header">' + options.header + '</div>')
+						.find('#' + options.prefixId + '-header');
+				}
+
+				if (options.footer) {
+					var boxFooter = box
+						.append('<div id="' + options.prefixId + '-footer">' + options.footer + '</div>')
+						.find('#' + options.prefixId + '-footer');
+				}
+
+				if (options.htmlClose) {
+					var boxClose = box
+						.prepend('<a href="#" id="' + options.prefixId + '-close">' + options.htmlClose + '</a>')
+						.children('#' + options.prefixId + '-close')
+						.css({
+							'cursor'     : 'pointer',
+							'display'    : 'block',
+							'position'   : 'absolute',
+							'white-space': 'nowrap',
+							'z-index'    : '100'
+						});
+				}
 
 				$.fx.off = !options.animation;
 
@@ -82,7 +113,7 @@
 					.data('closeBox', closeBox);
 
 				if (content == null || content == '') {
-					error('Content option is empty');
+					error('The content option was not set');
 				} else {
 					content = content.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 
@@ -154,7 +185,7 @@
 						if ($(content).length) {
 							var contentHtml = $(content).clone();
 							$(content)
-								.wrap('<div id="' + options.prefixId + '-temp"/>')
+								.wrap('<div id="' + options.prefixId + '-temp" style="display:none;"/>')
 								.appendTo(boxContent)
 								.show();
 							openBox();
@@ -177,30 +208,6 @@
 				}
 
 				function openBox() {
-					if (options.header) {
-						var boxHeader = box
-							.prepend('<div id="' + options.prefixId + '-header">' + options.header + '</div>')
-							.find('#' + options.prefixId + '-header');
-					}
-
-					if (options.footer) {
-						var boxFooter = box
-							.append('<div id="' + options.prefixId + '-footer">' + options.footer + '</div>')
-							.find('#' + options.prefixId + '-footer');
-					}
-
-					if (options.htmlClose) {
-						var boxClose = box
-							.prepend('<a href="#" id="' + options.prefixId + '-close">' + options.htmlClose + '</a>')
-							.children('#' + options.prefixId + '-close')
-							.css({
-								'cursor'     : 'pointer',
-								'display'    : 'block',
-								'position'   : 'absolute',
-								'white-space': 'nowrap',
-								'z-index'    : '100'
-							});
-					}
 					var boxExtraHeight = box.outerHeight() - box.height(),
 						boxExtraWidth = box.outerWidth() - box.width(),
 						boxContentExtraHeight = boxContent.outerHeight() - boxContent.height(),
@@ -218,25 +225,31 @@
 					});
 
 					if (boxContent[0].scrollWidth > boxContent.width() + boxContentExtraWidth) {
-						boxContent.css('overflow-x','scroll');
+						boxContent.css({
+							'overflow-x': 'scroll'
+						});
 					}
 
 					if (boxContent[0].scrollHeight > boxContent.height() + boxContentExtraHeight) {
-						boxContent.css('overflow-y','scroll');
+						boxContent.css({
+							'overflow-y': 'scroll'
+						});
 
-						var divScroll = $('body')
-								.prepend('<div id="' + options.prefixId + '-scroll"/>')
-								.find('#' + options.prefixId + '-scroll')
+						var body = $('body'),
+							divScroll = body
+								.prepend('<div id="box-scroll"/>')
+								.find('#box-scroll')
 								.css({
 									'visibility': 'hidden',
 									'position'  : 'absolute',
+									'background': 'red',
 									'height'    : 100,
 									'overflow-y': 'scroll'
-								});
+								}),
+							scroll_w = divScroll.width();
 
-						!options.header && options.htmlClose && parseInt(boxClose.css('right')) && boxClose.css('right', divScroll.width() + parseInt(boxClose.css('right')));
-						
 						divScroll.detach();
+						!options.header && options.htmlClose && parseInt(boxClose.css('right')) && boxClose.css('right', scroll_w + parseInt(boxClose.css('right')));
 					}
 
 					box
@@ -288,23 +301,20 @@
 				}
 
 				function error(msg) {
-					options = defaults;
 					boxContent
 						.append('<div id="' + options.prefixId + '-error"></div>')
 						.find('#' + options.prefixId + '-error')
+						.css('color', '#C00')
 						.text('ERROR: ' + msg + '!');
 					openBox();
 				}
 			}
-		}
-	});
-
-	$.fn.edbox = function(settings){
-		this.click(function(e) {
-			$.edbox(settings, this);
-			e.preventDefault();
 		});
-	}
+	};
+
+	$.edbox = function(settings) {
+		$('<a/>').edbox(settings).click();
+	};
 
 	$.edbox.close = function(callback) {
 		edboxInstance && $(document).data('closeBox')(callback);
