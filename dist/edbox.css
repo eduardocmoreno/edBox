@@ -2,43 +2,51 @@
 #box{
 	overflow:hidden;
 }
+#box *{
+	box-sizing: border-box;
+}
 #box,
 #box-load{
-	border-radius:8px;
-	background-color:rgba(0, 0, 0, .8);
-	box-shadow:0 0 10px rgba(0, 0, 0, .5);
+	border-radius:3px;
 }
 #box-load{
 	padding:10px;
 	background: #fff;
 }
+#box-loading{
+	width: 50px;
+	height: 50px;
+	background: url('../images/box-load.gif') no-repeat;
+}
 #box-overlay{
-	background:#000;
-	opacity:.5;
+	background: rgba(0,0,0, .5);
 }
 #box-header{
-	background:url("../images/bg-header.png") repeat-x;
+	background: #bbb;
 	height:40px;
 	line-height:40px;
 }
 #box-footer{
-	background:url("../images/bg-footer.png") repeat-x;
+	background: #bbb;
 	height:30px;
 	line-height:30px;
 }
 #box-header,
 #box-footer{
 	padding:0 10px;
-	color:#333;
+	color:#FFF;
 	font-weight:bold;
 }
 #box-close{
-	white-space:nowrap;
-	top:5px;
-	right:5px;
+	position: absolute;
+	top:10px;
+	right:10px;
+	width:16px;
+	height:16px;
 	border:0;
-	background:none;
+	background: url('../images/close-modal.png') no-repeat;
 	color:#000;
+	white-space:nowrap;
 }
 #box-close img{
 	display:block;
